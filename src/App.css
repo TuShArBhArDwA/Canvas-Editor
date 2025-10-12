@@ -1,8 +1,3 @@
-/* src/App.css */
-
-/* ------------------- */
-/* 1. Global Styles & Variables */
-/* ------------------- */
 :root {
   --primary-color: #4f46e5; /* A nice indigo */
   --primary-hover: #4338ca;
@@ -15,12 +10,7 @@
   --border-color: #e2e8f0;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* Base styles for the entire document */
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -97,7 +87,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden;
 }
 
 .toolbar-header {
@@ -109,7 +99,7 @@ body {
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   z-index: 10;
-  flex-shrink: 0; /* Prevent header from shrinking */
+  flex-shrink: 0;
 }
 
 .tool-group {
@@ -121,6 +111,7 @@ body {
 .toolbar-header .app-title {
   font-size: 1.25rem;
   font-weight: 700;
+  color: var(--text-primary);
   margin-right: 2rem;
 }
 
@@ -180,15 +171,14 @@ body {
 }
 
 .canvas-main {
-  flex-grow: 1; /* Make this area fill the remaining space */
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  overflow: auto; /* Allow scrolling if canvas is bigger than viewport */
+  overflow: auto;
 }
 
-/* Give the canvas element itself the shadow to make it pop */
 canvas {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   border: 1px solid var(--border-color);

@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import * as fabric from "fabric";
+import * as fabric from "fabric"; // Using the robust import
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 function CanvasEditor() {
   const { canvasId } = useParams();
-  const canvasRef = useRef(null); // For the <canvas> element
-  const fabricRef = useRef(null); // For the fabric.Canvas instance
+  const canvasRef = useRef(null);
+  const fabricRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#000000");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize canvas
+  // Initialize canvas and load data
   useEffect(() => {
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: window.innerWidth * 0.9,
@@ -21,7 +21,7 @@ function CanvasEditor() {
     });
     fabricRef.current = canvas;
 
-    // Load existing canvas from Firestore
+    // --- NEW: Load existing canvas from Firestore ---
     const loadCanvas = async () => {
       const docRef = doc(db, "canvases", canvasId);
       const docSnap = await getDoc(docRef);
@@ -29,19 +29,22 @@ function CanvasEditor() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.canvasJSON) {
+          // Use loadFromJSON to restore the canvas
           canvas.loadFromJSON(JSON.parse(data.canvasJSON), () => {
             canvas.renderAll();
           });
         }
       } else {
-        console.log("No such document!");
+        console.log(
+          "No such document! A new canvas will be created upon saving."
+        );
       }
       setIsLoading(false);
     };
 
     loadCanvas();
 
-    // Event listener for deleting objects with 'Delete' or 'Backspace' key
+    // --- NEW: Event listener for deleting objects ---
     const handleKeyDown = (e) => {
       if (e.key === "Delete" || e.key === "Backspace") {
         const activeObjects = canvas.getActiveObjects();
@@ -59,7 +62,7 @@ function CanvasEditor() {
       window.removeEventListener("keydown", handleKeyDown);
       canvas.dispose();
     };
-  }, [canvasId]);
+  }, [canvasId]); // Rerun effect if canvasId changes
 
   // Handlers for adding shapes
   const addRect = () => {
@@ -71,6 +74,7 @@ function CanvasEditor() {
       height: 100,
     });
     fabricRef.current.add(rect);
+    fabricRef.current.renderAll();
   };
 
   const addCircle = () => {
@@ -81,6 +85,7 @@ function CanvasEditor() {
       radius: 50,
     });
     fabricRef.current.add(circle);
+    fabricRef.current.renderAll();
   };
 
   const addText = () => {
@@ -89,40 +94,49 @@ function CanvasEditor() {
       top: 200,
       fill: color,
       fontSize: 20,
+      width: 150,
     });
     fabricRef.current.add(text);
+    fabricRef.current.renderAll();
   };
 
   // Pen tool toggle
   const toggleDrawing = () => {
-    fabricRef.current.isDrawingMode = !fabricRef.current.isDrawingMode;
-    setIsDrawing(!isDrawing);
+    const canvas = fabricRef.current;
+    canvas.isDrawingMode = !canvas.isDrawingMode;
+    setIsDrawing(canvas.isDrawingMode);
   };
 
-  // Handle color change for selected object
+  // --- NEW: Handle color change for selected object ---
   const handleColorChange = (e) => {
     const newColor = e.target.value;
     setColor(newColor);
-    const activeObject = fabricRef.current.getActiveObject();
-    if (activeObject) {
-      activeObject.set("fill", newColor);
-      fabricRef.current.renderAll();
+
+    const canvas = fabricRef.current;
+    // Update color of selected object(s)
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length > 0) {
+      activeObjects.forEach((obj) => {
+        obj.set("fill", newColor);
+      });
+      canvas.renderAll();
     }
-    // Also update drawing brush color
-    fabricRef.current.freeDrawingBrush.color = newColor;
+
+    // Update the drawing brush color
+    canvas.freeDrawingBrush.color = newColor;
   };
 
-  // Save canvas to Firestore
+  // --- NEW: Save canvas to Firestore ---
   const saveCanvas = async () => {
     try {
-      const json = fabricRef.current.toJSON();
+      const canvasJSON = fabricRef.current.toJSON();
       await setDoc(
         doc(db, "canvases", canvasId),
         {
-          canvasJSON: JSON.stringify(json),
+          canvasJSON: JSON.stringify(canvasJSON),
         },
         { merge: true }
-      ); // Use merge to not overwrite other fields like createdAt
+      );
       alert("Canvas saved successfully!");
     } catch (error) {
       console.error("Error saving canvas: ", error);
@@ -158,7 +172,6 @@ function CanvasEditor() {
           </button>
         </div>
       </header>
-
       <main className="canvas-main">
         <canvas ref={canvasRef} />
       </main>
