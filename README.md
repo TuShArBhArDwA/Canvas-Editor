@@ -23,17 +23,20 @@ This is a lightweight, web-based 2D canvas editor built with React, Fabric.js, a
 ### Getting Started
 
 1.  **Clone the repository:**
+
     ```sh
     git clone https://github.com/TuShArBhArDwA/simple-canvas-editor.git
     cd simple-canvas-editor
     ```
 
 2.  **Install dependencies:**
+
     ```sh
     npm install
     ```
 
 3.  **Set up Firebase:**
+
     - Create a new project at [firebase.google.com](https://firebase.google.com/).
     - Add a new Web App to your project.
     - Copy the `firebaseConfig` object.
