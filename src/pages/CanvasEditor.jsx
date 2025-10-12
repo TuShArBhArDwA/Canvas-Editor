@@ -131,24 +131,37 @@ function CanvasEditor() {
   };
 
   if (isLoading) {
-    return <div>Loading Canvas...</div>;
+    return <div className="loading-container">Loading Canvas...</div>;
   }
 
   return (
     <div className="canvas-editor-container">
-      <div className="toolbar">
-        <button onClick={addRect}>Rectangle</button>
-        <button onClick={addCircle}>Circle</button>
-        <button onClick={addText}>Text</button>
-        <button onClick={toggleDrawing} className={isDrawing ? "active" : ""}>
-          {isDrawing ? "Exit Pen" : "Pen Tool"}
-        </button>
-        <input type="color" value={color} onChange={handleColorChange} />
-        <button onClick={saveCanvas} className="save-btn">
-          Save
-        </button>
-      </div>
-      <canvas ref={canvasRef} />
+      <header className="toolbar-header">
+        <div className="tool-group">
+          <h2 className="app-title">Editor</h2>
+          <button onClick={addRect}>Rectangle</button>
+          <button onClick={addCircle}>Circle</button>
+          <button onClick={addText}>Text</button>
+          <button onClick={toggleDrawing} className={isDrawing ? "active" : ""}>
+            {isDrawing ? "Exit Pen" : "Pen Tool"}
+          </button>
+          <input
+            type="color"
+            value={color}
+            onChange={handleColorChange}
+            title="Select color"
+          />
+        </div>
+        <div className="tool-group">
+          <button onClick={saveCanvas} className="save-btn">
+            Save Canvas
+          </button>
+        </div>
+      </header>
+
+      <main className="canvas-main">
+        <canvas ref={canvasRef} />
+      </main>
     </div>
   );
 }
