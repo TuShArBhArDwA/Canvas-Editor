@@ -24,7 +24,7 @@ This is a lightweight, web-based 2D canvas editor built with React, Fabric.js, a
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/YOUR_USERNAME/simple-canvas-editor.git
+    git clone https://github.com/TuShArBhArDwA/simple-canvas-editor.git
     cd simple-canvas-editor
     ```
 
