@@ -177,6 +177,8 @@ body {
   justify-content: center;
   padding: 2rem;
   overflow: auto;
+  position: relative;
+  z-index: 1;
 }
 
 canvas {
