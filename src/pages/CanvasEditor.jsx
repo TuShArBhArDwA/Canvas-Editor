@@ -11,41 +11,39 @@ function CanvasEditor() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#000000");
   const [isLoading, setIsLoading] = useState(true);
-
+  const [canvasData, setCanvasData] = useState(null);
   useEffect(() => {
     const loadCanvasData = async () => {
+      setIsLoading(true);
       const docRef = doc(db, "canvases", canvasId);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.canvasJSON) {
-          fabricRef.current = data.canvasJSON;
+          setCanvasData(data.canvasJSON);
         }
       }
       setIsLoading(false);
     };
-
     loadCanvasData();
   }, [canvasId]);
-
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
+
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: window.innerWidth * 0.9,
       height: window.innerHeight * 0.8,
       backgroundColor: "#f0f0f0",
     });
+    fabricRef.current = canvas;
 
-    if (typeof fabricRef.current === "string") {
-      canvas.loadFromJSON(fabricRef.current, () => {
-        canvas.renderAll();
+    if (canvasData) {
+      canvas.loadFromJSON(canvasData, () => {
+        setTimeout(() => {
+          canvas.renderAll();
+        }, 0);
       });
     }
-
-    fabricRef.current = canvas;
 
     const handleKeyDown = (e) => {
       if (e.key === "Delete" || e.key === "Backspace") {
@@ -57,14 +55,12 @@ function CanvasEditor() {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if (canvas) {
-        canvas.dispose();
-      }
+      if (canvas) canvas.dispose();
     };
   }, [isLoading]);
-
   const addRect = () => {
     if (!fabricRef.current) return;
     const rect = new fabric.Rect({
@@ -77,6 +73,7 @@ function CanvasEditor() {
     fabricRef.current.add(rect);
     fabricRef.current.renderAll();
   };
+
   const addCircle = () => {
     if (!fabricRef.current) return;
     const circle = new fabric.Circle({
@@ -88,6 +85,7 @@ function CanvasEditor() {
     fabricRef.current.add(circle);
     fabricRef.current.renderAll();
   };
+
   const addText = () => {
     if (!fabricRef.current) return;
     const text = new fabric.Textbox("Edit me", {
@@ -100,13 +98,16 @@ function CanvasEditor() {
     fabricRef.current.add(text);
     fabricRef.current.renderAll();
   };
+
   const toggleDrawing = () => {
     if (!fabricRef.current) return;
     const canvas = fabricRef.current;
     canvas.isDrawingMode = !canvas.isDrawingMode;
     if (canvas.isDrawingMode) {
-      canvas.freeDrawingBrush.color = color;
-      canvas.freeDrawingBrush.width = 3;
+      if (canvas.freeDrawingBrush) {
+        canvas.freeDrawingBrush.color = color;
+        canvas.freeDrawingBrush.width = 3;
+      }
     }
     setIsDrawing(canvas.isDrawingMode);
   };
@@ -125,7 +126,6 @@ function CanvasEditor() {
       canvas.freeDrawingBrush.color = newColor;
     }
   };
-
   const saveCanvas = async () => {
     if (!fabricRef.current) return;
     try {
