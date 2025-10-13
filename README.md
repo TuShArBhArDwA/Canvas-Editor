@@ -1,13 +1,15 @@
 # 2D Canvas Editor
-
-
-<img width="1898" height="971" alt="image" src="https://github.com/user-attachments/assets/dae6adf2-d8b7-4731-b513-918376a66708" />
 A lightweight, real-time 2D canvas editor built with React, Fabric.js, and Firebase Firestore.
 
-**[➡️ Live Demo Link](https://simple-canvas-editor.vercel.app)**
+**[➡️ Deployed Link](https://simple-canvas-editor.vercel.app)**
 
 ---
-Project Video - Coming Soon...
+
+## Project Demo
+
+[![Watch the video](https://github.com/user-attachments/assets/dae6adf2-d8b7-4731-b513-918376a66708)](https://www.loom.com/share/117cc3474152449bb3d786a6c6cf283d?sid=e092c174-09d9-4d40-85b6-338fb8663079)
+
+> Click the thumbnail above to watch a quick walkthrough of the project on Loom.
 
 ---
 
