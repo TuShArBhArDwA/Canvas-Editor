@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import * as fabric from "fabric";
+import * as fabricNamespace from "fabric";
+const fabric = fabricNamespace.fabric || fabricNamespace;
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -12,6 +13,7 @@ function CanvasEditor() {
   const [color, setColor] = useState("#000000");
   const [isLoading, setIsLoading] = useState(true);
   const [canvasData, setCanvasData] = useState(null);
+
   useEffect(() => {
     const loadCanvasData = async () => {
       setIsLoading(true);
@@ -27,6 +29,7 @@ function CanvasEditor() {
     };
     loadCanvasData();
   }, [canvasId]);
+
   useEffect(() => {
     if (isLoading) return;
 
@@ -60,7 +63,8 @@ function CanvasEditor() {
       window.removeEventListener("keydown", handleKeyDown);
       if (canvas) canvas.dispose();
     };
-  }, [isLoading]);
+  }, [isLoading, canvasData]);
+
   const addRect = () => {
     if (!fabricRef.current) return;
     const rect = new fabric.Rect({
@@ -102,39 +106,45 @@ function CanvasEditor() {
   const toggleDrawing = () => {
     if (!fabricRef.current) return;
     const canvas = fabricRef.current;
-    canvas.isDrawingMode = !canvas.isDrawingMode;
-    if (canvas.isDrawingMode) {
-      if (canvas.freeDrawingBrush) {
-        canvas.freeDrawingBrush.color = color;
-        canvas.freeDrawingBrush.width = 3;
+    const newMode = !canvas.isDrawingMode;
+    canvas.isDrawingMode = newMode;
+
+    if (newMode) {
+      if (!canvas.freeDrawingBrush) {
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       }
+      canvas.freeDrawingBrush.color = color;
+      canvas.freeDrawingBrush.width = 3;
     }
-    setIsDrawing(canvas.isDrawingMode);
+
+    setIsDrawing(newMode);
   };
 
   const handleColorChange = (e) => {
     if (!fabricRef.current) return;
     const newColor = e.target.value;
     setColor(newColor);
+
     const canvas = fabricRef.current;
     const activeObjects = canvas.getActiveObjects();
+
     if (activeObjects.length > 0) {
       activeObjects.forEach((obj) => obj.set("fill", newColor));
       canvas.renderAll();
     }
-    if (canvas.freeDrawingBrush) {
+
+    if (canvas.isDrawingMode && canvas.freeDrawingBrush) {
       canvas.freeDrawingBrush.color = newColor;
     }
   };
+
   const saveCanvas = async () => {
     if (!fabricRef.current) return;
     try {
       const canvasJSON = fabricRef.current.toJSON();
       await setDoc(
         doc(db, "canvases", canvasId),
-        {
-          canvasJSON: JSON.stringify(canvasJSON),
-        },
+        { canvasJSON: JSON.stringify(canvasJSON) },
         { merge: true }
       );
       alert("Canvas saved successfully!");
@@ -143,9 +153,11 @@ function CanvasEditor() {
       alert("Failed to save canvas.");
     }
   };
+
   if (isLoading) {
     return <div className="loading-container">Loading Canvas...</div>;
   }
+
   return (
     <div className="canvas-editor-container">
       <header className="toolbar-header">
