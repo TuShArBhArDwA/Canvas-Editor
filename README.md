@@ -1,12 +1,13 @@
 # Simple 2D Canvas Editor
 
+
+<img width="1898" height="971" alt="image" src="https://github.com/user-attachments/assets/dae6adf2-d8b7-4731-b513-918376a66708" />
 A lightweight, real-time 2D canvas editor built with React, Fabric.js, and Firebase Firestore.
 
 **[➡️ Live Demo Link](https://simple-canvas-editor.vercel.app)**
 
 ---
-
-![Canvas Editor Screenshot](path_to_your_screenshot.png) 
+Project Video - Coming Soon...
 
 ---
 
