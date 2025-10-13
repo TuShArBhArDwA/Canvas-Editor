@@ -1,4 +1,4 @@
-# Simple 2D Canvas Editor
+# 2D Canvas Editor
 
 
 <img width="1898" height="971" alt="image" src="https://github.com/user-attachments/assets/dae6adf2-d8b7-4731-b513-918376a66708" />
