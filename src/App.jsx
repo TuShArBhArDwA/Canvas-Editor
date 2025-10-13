@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CanvasEditor from "./pages/CanvasEditor";
+import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/canvas/:canvasId" element={<CanvasEditor />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
