@@ -14,7 +14,7 @@ A lightweight, real-time 2D canvas editor built with **React**, **Fabric.js**, a
 
 ## Live Demo
 
-**[➡️ Deployed Link](https://simple-canvas-editor.vercel.app)**  
+**[➡️ Deployed Link](https://canvas.minianon.in)**  
 
 > Visit the live version of the project.
 
@@ -97,13 +97,8 @@ This project was a fantastic exercise in integrating a stateful, non-React libra
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ---
 
-## Contact
-- **Meet T-Bot** - [Discover My Work](https://t-bot-blush.vercel.app/)
-- **Tushar Bhardwaj** - [Portfolio](https://tushar-bhardwaj.vercel.app/)
-- **Connect 1:1** - [Topmate](https://topmate.io/tusharbhardwaj)
-- **GitHub:** [TuShArBhArDwA](https://github.com/TuShArBhArDwA)
-- **LinkedIn:** [Tushar Bhardwaj](https://www.linkedin.com/in/bhardwajtushar2004/)
-- **Email:** [tusharbhardwaj2617@example.com](mailto:tusharbhardwaj2617@example.com)
+## Connect with me
+
+If you’d like to connect or provide feedback, feel free to reach out — [Click here](https://minianonlink.vercel.app/tusharbhardwaj)
